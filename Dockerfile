@@ -118,37 +118,37 @@ RUN \
     cd cmdstan-2.33.1 && \
     make -j4 build
 
-# # The pandoc package in ubuntu 20.04 seems too old for certain things
-# RUN \
-#   curl -OL "https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-linux-amd64.tar.gz" &&\
-#   tar xzvf pandoc-2.16.2-linux-amd64.tar.gz -C/usr/local --strip 1 &&\
-#   rm pandoc-2.16.2-linux-amd64.tar.gz
+# The pandoc package in ubuntu 20.04 seems too old for certain things
+RUN \
+  curl -OL "https://github.com/jgm/pandoc/releases/download/2.16.2/pandoc-2.16.2-linux-amd64.tar.gz" &&\
+  tar xzvf pandoc-2.16.2-linux-amd64.tar.gz -C/usr/local --strip 1 &&\
+  rm pandoc-2.16.2-linux-amd64.tar.gz
 
-# RUN \
-#   curl -OL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.3.361/quarto-1.3.361-linux-amd64.deb" &&\
-#   dpkg -i quarto-1.3.361-linux-amd64.deb &&\
-#   rm quarto-1.3.361-linux-amd64.deb
+RUN \
+  curl -OL "https://github.com/quarto-dev/quarto-cli/releases/download/v1.3.361/quarto-1.3.361-linux-amd64.deb" &&\
+  dpkg -i quarto-1.3.361-linux-amd64.deb &&\
+  rm quarto-1.3.361-linux-amd64.deb
 
-# ENV CARGO_HOME="/opt/.cargo"
-# ENV RUSTUP_HOME="/opt/.rustup"
-# ENV PATH="$PATH:/opt/.cargo/bin"
+ENV CARGO_HOME="/opt/.cargo"
+ENV RUSTUP_HOME="/opt/.rustup"
+ENV PATH="$PATH:/opt/.cargo/bin"
 
-# RUN \
-#   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+RUN \
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
 
-# COPY Renviron /etc/R/Renviron.site
-# COPY Rprofile /etc/R/Rprofile.site
+COPY Renviron /etc/R/Renviron.site
+COPY Rprofile /etc/R/Rprofile.site
 
-# # NB: Docker says $HOME should be available but it isnt so we hardcode /root for now
-# ENV PATH="/root/bin:${PATH}"
+# NB: Docker says $HOME should be available but it isnt so we hardcode /root for now
+ENV PATH="/root/bin:${PATH}"
 
-# # Install TinyTex + common packages and put it on the PATH
-# RUN R -e 'install.packages("tinytex");tinytex:::install_prebuilt("TinyTeX")' && \
-#     rm -f TinyTeX.tar.gz && \
-#     tlmgr option repository https://ctan.math.illinois.edu/systems/texlive/tlnet
+# Install TinyTex + common packages and put it on the PATH
+RUN R -e 'install.packages("tinytex");tinytex:::install_prebuilt("TinyTeX")' && \
+    rm -f TinyTeX.tar.gz && \
+    tlmgr option repository https://ctan.math.illinois.edu/systems/texlive/tlnet
 
-# # Disable debug flags and things that dont work in docker
-# RUN \
-#   rm -f /usr/bin/timedatectl &&\
-#   rm -f /etc/ImageMagick-6/policy.xml &&\
-#   sed -i.bak 's|-g ||g' /etc/R/Makeconf
+# Disable debug flags and things that dont work in docker
+RUN \
+  rm -f /usr/bin/timedatectl &&\
+  rm -f /etc/ImageMagick-6/policy.xml &&\
+  sed -i.bak 's|-g ||g' /etc/R/Makeconf
