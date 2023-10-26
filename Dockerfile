@@ -112,10 +112,11 @@ RUN \
 
 # Install CmdStan
 RUN \
-    git clone https://github.com/stan-dev/cmdstan.git --branch v2.33.1 --recursive && \
-    cd cmdstan && \
-    make -j4 build && \
-    mv /cmdstan /root/.cmdstan/cmdstan-2.33.1
+    mkdir /root/.cmdstan && \
+    cd /root/.cmdstan && \
+    git clone https://github.com/stan-dev/cmdstan.git cmdstan-2.33.1 --branch v2.33.1 --recursive && \
+    cd cmdstan-2.33.1 && \
+    make -j4 build
 
 # # The pandoc package in ubuntu 20.04 seems too old for certain things
 # RUN \
