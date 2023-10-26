@@ -18,6 +18,7 @@ RUN \
     curl \
     flac \
     fonts-emojione \
+    g++ \
     git \
     global \
     hugo \
@@ -85,6 +86,7 @@ RUN \
     libxml2-dev \
     libxslt-dev \
     libzmq3-dev \
+    make \
     protobuf-compiler \
     python3-numpy \
     python3-pip \
@@ -107,6 +109,12 @@ RUN \
     apt-get install -y librdf0-dev && \
     rm -fv /etc/apt/sources.list.d/* && \
     apt-get clean
+
+# Install CmdStan
+RUN \
+    git clone https://github.com/stan-dev/cmdstan.git --recursive && \
+    cd cmdstan && \
+    make build
 
 # The pandoc package in ubuntu 20.04 seems too old for certain things
 RUN \
